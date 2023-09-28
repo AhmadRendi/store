@@ -14,4 +14,6 @@ public class RegisPembeliDTO {
     private String noTelp;
 
     private String alamat;
+
+
 }
