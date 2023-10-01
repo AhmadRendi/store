@@ -30,4 +30,38 @@ public class Test {
 
 
 
+    class Kal {
+        private int v;
+
+        public int hit(int n, int y){
+            return v = n + y;
+        }
+
+        public int getV(){
+            return v;
+        }
+    }
+
+
+    class Hitu extends Kal{
+
+        @Override
+        public int getV() {
+            return super.getV();
+        }
+
+        @Override
+        public int hit(int n, int y) {
+            return super.hit(n, y);
+        }
+    }
+
+    @org.junit.jupiter.api.Test
+    void name() {
+        Hitu hitu = new Hitu();
+
+        hitu.hit(5,7);
+
+        System.out.println(hitu.getV());
+    }
 }
