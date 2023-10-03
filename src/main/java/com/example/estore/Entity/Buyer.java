@@ -3,8 +3,10 @@ package com.example.estore.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collection;
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Builder
@@ -30,7 +32,7 @@ public class Buyer extends User{
     private String address;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role roles;
 
 
     @Override

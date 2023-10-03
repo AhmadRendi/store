@@ -8,16 +8,19 @@ import java.util.function.Function;
 
 import com.example.estore.exception.TokenExpiredException;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
+@RequiredArgsConstructor
+@Service
 public class JWTService {
 
 
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.ES256);
+//    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.ES256);
 
 
 
@@ -78,6 +81,6 @@ public class JWTService {
     }
 
     public Key getSecretKey(){
-        return Keys.hmacShaKeyFor(SECRET_KEY.getEncoded());
+        return Keys.hmacShaKeyFor(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
     }
 }

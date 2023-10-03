@@ -1,67 +1,29 @@
 package com.example.estore;
 
+import com.example.estore.dto.request.RegisBuyerDTO;
+import com.example.estore.dto.response.ResponseAPI;
+import com.example.estore.service.impl.BuyerServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.validation.BindException;
+import org.springframework.validation.Errors;
+
+import java.io.UnsupportedEncodingException;
 import java.sql.*;
+import java.util.InputMismatchException;
 
-
-
+@SpringBootTest
 public class Test {
 
 
-    @org.junit.jupiter.api.Test
-    void test() throws SQLException {
-        String url = "jdbc:mysql://localhost:port/nama_database";
-        String username = "";
-        String password = " ";
-        Connection connection = DriverManager.getConnection(url, username, password);
-        connection.close();
+    @Autowired
+    BuyerServiceImpl buyerService;
 
-        String sql = """
-                SELECT * FROM 
-                """;
-
-        try(Statement statement = connection.createStatement()){
-
-            statement.executeUpdate(sql);
-
-        }catch (SQLException exception){
-
-        }
-    }
+    Errors errors;
 
 
 
-    class Kal {
-        private int v;
-
-        public int hit(int n, int y){
-            return v = n + y;
-        }
-
-        public int getV(){
-            return v;
-        }
-    }
 
 
-    class Hitu extends Kal{
-
-        @Override
-        public int getV() {
-            return super.getV();
-        }
-
-        @Override
-        public int hit(int n, int y) {
-            return super.hit(n, y);
-        }
-    }
-
-    @org.junit.jupiter.api.Test
-    void name() {
-        Hitu hitu = new Hitu();
-
-        hitu.hit(5,7);
-
-        System.out.println(hitu.getV());
-    }
 }
