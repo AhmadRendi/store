@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import com.example.estore.exception.TokenExpiredException;
+import com.example.estore.validation.TokenExpiredException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -76,7 +76,7 @@ public class JWTService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(currentDate)
                 .setExpiration(expirate)
-                .signWith(getSecretKey(), SignatureAlgorithm.ES256)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 

@@ -12,4 +12,6 @@ public interface BuyerRepo extends JpaRepository<Buyer, Long> {
 
     Optional<Buyer> findBuyerByUsernames(String username);
 
+    Optional<Buyer> findBuyerByEmails(String email);
+
 }

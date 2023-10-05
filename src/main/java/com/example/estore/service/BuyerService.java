@@ -1,11 +1,11 @@
 package com.example.estore.service;
 
 import com.example.estore.Entity.Buyer;
-import com.example.estore.dto.request.RegisBuyerDTO;
+import com.example.estore.dto.request.RequestRegisBuyerDTO;
+import com.example.estore.dto.request.RequestLoginBuyer;
 import com.example.estore.dto.response.ResponseAPI;
+import com.example.estore.validation.EmailUserNotFoundException;
 import org.springframework.validation.Errors;
-
-import java.util.Optional;
 
 public interface BuyerService {
 
@@ -13,5 +13,9 @@ public interface BuyerService {
 
     void findUsernames(String username);
 
-    ResponseAPI<?> createAccountsNews(RegisBuyerDTO regisBuyerDTO, Errors errors);
+    ResponseAPI<?> createAccountsNews(RequestRegisBuyerDTO requestRegisBuyerDTO, Errors errors);
+
+    ResponseAPI<?> login(RequestLoginBuyer loginBuyer, Errors errors);
+
+    Buyer findEmail(String email) throws EmailUserNotFoundException;
 }

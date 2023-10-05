@@ -1,4 +1,4 @@
-package com.example.estore.exception;
+package com.example.estore.validation;
 
 import io.jsonwebtoken.JwtException;
 
