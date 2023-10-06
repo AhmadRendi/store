@@ -32,4 +32,8 @@ public class Test {
         }
     }
 
+    @org.junit.jupiter.api.Test
+    void s() {
+//        buyerService.UpdateAddressAndCellphones("Balikpapan", "08", 52L);
+    }
 }

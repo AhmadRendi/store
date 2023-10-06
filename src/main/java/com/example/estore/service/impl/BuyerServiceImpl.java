@@ -13,6 +13,7 @@ import com.example.estore.security.jwt.JWTService;
 import com.example.estore.service.BuyerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -70,10 +71,11 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
     }
 
     private void checkPasswordIsValid(String password){
-        boolean findLowerCaseAndUpperCase = Pattern.compile("[A-Za-z]").matcher(password).find();
+        boolean findLowerCase = Pattern.compile("[a-z]").matcher(password).find();
+        boolean findUpperCase = Pattern.compile("[A-Z]").matcher(password).find();
         boolean findNumber = Pattern.compile("[\\d]").matcher(password).find();
         boolean findSymbol = Pattern.compile("[\\W]").matcher(password).find();
-        if(findLowerCaseAndUpperCase && findNumber && findSymbol){
+        if(findLowerCase && findUpperCase && findNumber && findSymbol){
             return;
         }
         throw new InputMismatchException("password not valid");
@@ -86,6 +88,14 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
                 throw new InputMismatchException("username not valid");
             }
         }
+    }
+
+
+    private void validationEmailIsReady(String email){
+        if(buyerRepo.findBuyerByEmails(email).isPresent()){
+            throw new DuplicateKeyException("Email is already");
+        }
+        return;
     }
 
     private Buyer mapperToBuyer(RequestRegisBuyerDTO requestRegisBuyerDTO){
@@ -101,31 +111,21 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
     @Override
     public ResponseAPI<?> createAccountsNews(RequestRegisBuyerDTO requestRegisBuyerDTO, Errors errors) {
         try{
+            errorHandling.inputMismatchException(errors);
             findUsernames(requestRegisBuyerDTO.getUsername());
-            if(ErrorHandling.inputMissException(errors)){
-                log.info("saya sampai disini");
-                checkUsernameIsValid(requestRegisBuyerDTO.getUsername());
-                checkPasswordIsValid(requestRegisBuyerDTO.getPassword());
+            validationEmailIsReady(requestRegisBuyerDTO.getEmail());
+            checkUsernameIsValid(requestRegisBuyerDTO.getUsername());
+            checkPasswordIsValid(requestRegisBuyerDTO.getPassword());
+            checkUsernameIsValid(requestRegisBuyerDTO.getUsername());
+            checkPasswordIsValid(requestRegisBuyerDTO.getPassword());
 
-                Buyer buyer = mapperToBuyer(requestRegisBuyerDTO);
-                buyerRepo.save(buyer);
-                return ResponseAPI.builder()
-                        .data(buyer)
-                        .message("success")
-                        .code(HttpStatus.CREATED.value())
-                        .build();
-            }
-//            checkUsernameIsValid(requestRegisBuyerDTO.getUsername());
-//            checkPasswordIsValid(requestRegisBuyerDTO.getPassword());
-
-//            Buyer buyer = mapperToBuyer(requestRegisBuyerDTO);
-//            buyerRepo.save(buyer);
-//            return ResponseAPI.builder()
-//                    .data(buyer)
-//                    .message("success")
-//                    .code(HttpStatus.CREATED.value())
-//                    .build();
-            return null;
+            Buyer buyer = mapperToBuyer(requestRegisBuyerDTO);
+            buyerRepo.save(buyer);
+            return ResponseAPI.builder()
+                    .data(buyer)
+                    .message("success")
+                    .code(HttpStatus.CREATED.value())
+                    .build();
 
         }catch (
                 DuplicateKeyException |
@@ -182,6 +182,34 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
                     .message(exception.getMessage())
                     .error(error)
                     .code(HttpStatus.NOT_FOUND.value())
+                    .build();
+        }
+    }
+
+    @Override
+    public ResponseAPI<?> UpdateAddressAndCellphones(String address,
+                                                     String cellphone,
+                                                     Long id,
+                                                     Errors errors) {
+        try{
+            errorHandling.inputMismatchException(errors);
+
+            buyerRepo.updateAddressAndCellphone(address, cellphone, id);
+
+            return ResponseAPI.builder()
+                    .message("Berhasil Update")
+                    .code(HttpStatus.OK.value())
+                    .build();
+        }catch (
+                InputMismatchException exception
+        ){
+            List<String> error = new ArrayList<>();
+            error.add(HttpStatus.BAD_REQUEST.name());
+
+            return ResponseAPI.builder()
+                    .message(exception.getMessage())
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .error(error)
                     .build();
         }
     }
