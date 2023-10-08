@@ -4,6 +4,7 @@ import com.example.estore.Entity.Buyer;
 import com.example.estore.Entity.Role;
 import com.example.estore.dto.request.RequestRegisBuyerDTO;
 import com.example.estore.dto.request.RequestLoginBuyer;
+import com.example.estore.dto.request.RequestUpdateAddressCellphoneBuyer;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.validation.EmailUserNotFoundException;
 import com.example.estore.validation.ErrorHandling;
@@ -13,6 +14,7 @@ import com.example.estore.security.jwt.JWTService;
 import com.example.estore.service.BuyerService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Request;
 import org.apache.coyote.Response;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -103,8 +105,7 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
         buyer.setEmails(requestRegisBuyerDTO.getEmail());
         buyer.setUsernames(requestRegisBuyerDTO.getUsername());
         buyer.setPasswords(passwordEncoder.encode(requestRegisBuyerDTO.getPassword()));
-        buyer.setRole(Role.valueOf(requestRegisBuyerDTO.getRoles()));
-        buyer.setRoles(buyer.getRole());
+        buyer.setRoles(Role.valueOf(requestRegisBuyerDTO.getRoles()));
         return buyer;
     }
 
@@ -161,10 +162,8 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
 
             errorHandling.inputMismatchException(errors);
 
-            log.info("saya sampai disini");
             var username = service.generatedToken(loadUserByEmails(loginBuyer.getEmail()));
             Buyer buyer = findEmail(loginBuyer.getEmail());
-            buyer.setRole(buyer.getRoles());
             return ResponseAPI.builder()
                     .token(username)
                     .data(buyer)
@@ -186,15 +185,17 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
         }
     }
 
+
     @Override
-    public ResponseAPI<?> UpdateAddressAndCellphones(String address,
-                                                     String cellphone,
-                                                     Long id,
+    public ResponseAPI<?> UpdateAddressAndCellphones(RequestUpdateAddressCellphoneBuyer buyerUpdate,
                                                      Errors errors) {
         try{
             errorHandling.inputMismatchException(errors);
 
-            buyerRepo.updateAddressAndCellphone(address, cellphone, id);
+            buyerRepo.updateAddressAndCellphone(
+                    buyerUpdate.getAddress(),
+                    buyerUpdate.getCellphone(),
+                    buyerUpdate.getId());
 
             return ResponseAPI.builder()
                     .message("Berhasil Update")

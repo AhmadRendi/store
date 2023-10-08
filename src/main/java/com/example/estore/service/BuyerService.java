@@ -3,6 +3,7 @@ package com.example.estore.service;
 import com.example.estore.Entity.Buyer;
 import com.example.estore.dto.request.RequestRegisBuyerDTO;
 import com.example.estore.dto.request.RequestLoginBuyer;
+import com.example.estore.dto.request.RequestUpdateAddressCellphoneBuyer;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.validation.EmailUserNotFoundException;
 import org.springframework.data.jpa.repository.Modifying;
@@ -25,9 +26,7 @@ public interface BuyerService {
 
     Buyer findEmail(String email) throws EmailUserNotFoundException;
 
-    ResponseAPI<?> UpdateAddressAndCellphones(@Param("address") String address,
-                                              @Param("cellphone") String cellphone,
-                                              @Param("id") Long id,
+    ResponseAPI<?> UpdateAddressAndCellphones(RequestUpdateAddressCellphoneBuyer addressCellphoneBuyer,
                                               Errors errors
     );
 

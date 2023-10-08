@@ -1,5 +1,8 @@
 package com.example.estore.security.jwt;
 
+import com.example.estore.Entity.Buyer;
+import com.example.estore.service.BuyerService;
+import com.example.estore.service.impl.BuyerServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +28,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private  JWTService service;
     private UserDetailsService  userDetailsService;
+    private BuyerServiceImpl buyerService;
 
     @Override
     protected void doFilterInternal(
@@ -42,10 +46,11 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
+        log.info(header);
 
         jwt = header.substring(7);
+        log.info(jwt);
         username = service.extractUsername(jwt);
-
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             UserDetails userDetails  = this.userDetailsService.loadUserByUsername(username);
@@ -59,7 +64,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                             new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authenticationFilter);
             }
-            log.info("sampai disini");
             filterChain.doFilter(request, response);
         }
     }

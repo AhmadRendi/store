@@ -2,6 +2,7 @@ package com.example.estore.controller;
 
 import com.example.estore.dto.request.RequestRegisBuyerDTO;
 import com.example.estore.dto.request.RequestLoginBuyer;
+import com.example.estore.dto.request.RequestUpdateAddressCellphoneBuyer;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.service.impl.BuyerServiceImpl;
 import jakarta.validation.Valid;
@@ -28,6 +29,14 @@ public class BuyerController {
     @GetMapping("/login")
     public ResponseEntity<ResponseAPI<?>> login(@Valid @RequestBody RequestLoginBuyer loginBuyer, Errors errors){
         return ResponseEntity.ok(buyerService.login(loginBuyer, errors));
+    }
+
+    @PutMapping("/update/address/cellphone")
+    public ResponseEntity<ResponseAPI<?>> updateAddressAndCellphone(@Valid
+                                                                    @RequestBody RequestUpdateAddressCellphoneBuyer addressCellphoneBuyer,
+                                                                    Errors errors
+    ){
+        return ResponseEntity.ok(buyerService.UpdateAddressAndCellphones(addressCellphoneBuyer, errors));
     }
 
 

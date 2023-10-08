@@ -20,8 +20,17 @@ import org.springframework.stereotype.Service;
 public class JWTService {
 
 
-//    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.ES256);
+    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
+//    public String extractUsernameByToken(String token){
+//        Claims claims = Jwts
+//                .parserBuilder()
+//                .setSigningKey(getSecretKey())
+//                .build()
+//                .parseClaimsJws(token)
+//                .getBody();
+//        return claims.getSubject();
+//    }
 
 
     public boolean isValidToken(String token, UserDetails userDetails){
@@ -57,7 +66,7 @@ public class JWTService {
     private Claims extractAllClaims(String token){
         return Jwts
                 .parserBuilder()
-                .setSigningKey(getSecretKey())
+                .setSigningKey(getSiginKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -76,11 +85,15 @@ public class JWTService {
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(currentDate)
                 .setExpiration(expirate)
-                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+                .signWith(getSiginKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Key getSecretKey(){
         return Keys.hmacShaKeyFor(Keys.secretKeyFor(SignatureAlgorithm.HS256).getEncoded());
+    }
+
+    public Key getSiginKey(){
+        return Keys.hmacShaKeyFor(SECRET_KEY.getEncoded());
     }
 }
