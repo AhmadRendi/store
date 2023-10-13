@@ -7,22 +7,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Data
-public class RequestRegisBuyerDTO {
-
+public class RequestRegisOwnerDTO {
 
     @Email(message = "email not valid")
     @NotBlank(message = "email can't blank")
-    private String email;
+    private String emails;
 
     @NotBlank(message = "username can't blank")
-    private String username;
+    private String usernames;
 
     @NotBlank(message = "password can't blank")
-    private String password;
+    private String passwords;
 
-    @NotBlank
-    private String name;
+    @NotBlank(message = "name can't blank")
+    private String names;
 
-    private String roles = "BUYER";
-
+    private String role = "OWNER";
 }

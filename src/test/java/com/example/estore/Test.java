@@ -1,21 +1,65 @@
 package com.example.estore;
 
+import com.example.estore.Entity.Owner;
+import com.example.estore.Entity.Store;
+import com.example.estore.repo.OwnerRepo;
+import com.example.estore.repo.StoreRepo;
 import com.example.estore.service.impl.BuyerServiceImpl;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.validation.Errors;
 
-import java.util.regex.Matcher;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 
 @SpringBootTest
 public class Test {
 
+    @Autowired
+    OwnerRepo ownerRepo;
 
     @Autowired
     BuyerServiceImpl buyerService;
+
+    @Autowired
+    StoreRepo storeRepo;
+
+
+    private Long checkIdIsAlReady(List<Store> list, long searchId){
+        long start = 0L;
+        long end =  list.size();
+
+        while(start < end){
+
+            long mid = (start + end) / 2;
+            Long midId = list.get(Math.toIntExact(mid)).getId();
+            long compare = midId.compareTo(searchId);
+            if(compare == 0){
+                return midId;
+            } else if (compare < 0) {
+                end = mid - 1;
+            }else {
+                start = mid + 1;
+            }
+        }
+        return null;
+    }
+    @org.junit.jupiter.api.Test
+    void name1() {
+        Long id = 1_000_000_000L;
+        Random random = new Random();
+        Long ids = random.nextLong(id);
+
+        List<Store> list2 = storeRepo.findAll().parallelStream()
+                .sorted(Comparator.comparing(Store::getId))
+                .toList();
+
+        checkIdIsAlReady(list2,  12L);
+
+    }
 
     Errors errors;
 
@@ -34,6 +78,13 @@ public class Test {
 
     @org.junit.jupiter.api.Test
     void s() {
-//        buyerService.UpdateAddressAndCellphones("Balikpapan", "08", 52L);
+
+        String names = "Ahmad Rendi";
+        String password = "123";
+        String username = "43";
+        String email = "ahmad@gmail.com";
+        String role = "OWNER";
+//        ownerRepo.saved(username, email, names, password, role);
+//        ownerRepo.saveOwner(username, email, names, password, role);
     }
 }

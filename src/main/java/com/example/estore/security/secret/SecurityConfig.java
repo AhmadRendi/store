@@ -27,8 +27,13 @@ public class SecurityConfig{
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth ->{
-                    auth.requestMatchers("/api/user/registration").permitAll();
-                    auth.requestMatchers("/api/user/login").permitAll();
+                    auth.requestMatchers("/api/registration/owner").permitAll();
+                    auth.requestMatchers("/api/registration/buyer").permitAll();
+                    auth.requestMatchers("/api/login/buyer").permitAll();
+                    auth.requestMatchers("/api/store/create").permitAll();
+                    auth.requestMatchers("api/store/**").hasAnyAuthority("OWNER", "ADMIN");
+                    auth.requestMatchers("/api/user/**").hasAnyRole("BUYER", "ADMIN");
+                    auth.requestMatchers("/api/owner/**").hasAnyRole("OWNER", "ADMIN");
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(sesMen -> {

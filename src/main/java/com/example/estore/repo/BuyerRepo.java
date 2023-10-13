@@ -1,6 +1,7 @@
 package com.example.estore.repo;
 
 import com.example.estore.Entity.Buyer;
+import com.example.estore.Entity.Owner;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,5 +23,8 @@ public interface BuyerRepo extends JpaRepository<Buyer, Long> {
     @Transactional
     @Query(value = "CALL updateAddressAndCellphoneBuyer(:address, :cellphone, :id);", nativeQuery = true)
     void updateAddressAndCellphone(@Param("address") String address,@Param("cellphone") String cellphone,@Param("id") Long id);
+
+
+
 
 }

@@ -19,4 +19,6 @@ public  class User  {
     private String usernames;
 
     private String passwords;
+
+    private String name;
 }

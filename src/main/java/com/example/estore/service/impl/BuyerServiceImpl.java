@@ -12,6 +12,7 @@ import com.example.estore.extend.UserDetailService;
 import com.example.estore.repo.BuyerRepo;
 import com.example.estore.security.jwt.JWTService;
 import com.example.estore.service.BuyerService;
+import com.example.estore.validation.ValidationField;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Request;
@@ -43,6 +44,8 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
 
     private JWTService service;
 
+    private ValidationField validationField;
+
 
     @Override
     public void findUsernames(String username) {
@@ -72,26 +75,6 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
         return buyerRepo.findBuyerByEmails(email).orElseThrow(() -> new UsernameNotFoundException("email not found"));
     }
 
-    private void checkPasswordIsValid(String password){
-        boolean findLowerCase = Pattern.compile("[a-z]").matcher(password).find();
-        boolean findUpperCase = Pattern.compile("[A-Z]").matcher(password).find();
-        boolean findNumber = Pattern.compile("[\\d]").matcher(password).find();
-        boolean findSymbol = Pattern.compile("[\\W]").matcher(password).find();
-        if(findLowerCase && findUpperCase && findNumber && findSymbol){
-            return;
-        }
-        throw new InputMismatchException("password not valid");
-    }
-
-    private void checkUsernameIsValid(String username) {
-        final byte[] usernames = username.getBytes();
-        for (int i = 0; i < username.length(); i++){
-            if(usernames[i] == ' '){
-                throw new InputMismatchException("username not valid");
-            }
-        }
-    }
-
 
     private void validationEmailIsReady(String email){
         if(buyerRepo.findBuyerByEmails(email).isPresent()){
@@ -115,10 +98,8 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
             errorHandling.inputMismatchException(errors);
             findUsernames(requestRegisBuyerDTO.getUsername());
             validationEmailIsReady(requestRegisBuyerDTO.getEmail());
-            checkUsernameIsValid(requestRegisBuyerDTO.getUsername());
-            checkPasswordIsValid(requestRegisBuyerDTO.getPassword());
-            checkUsernameIsValid(requestRegisBuyerDTO.getUsername());
-            checkPasswordIsValid(requestRegisBuyerDTO.getPassword());
+            validationField.checkUsernameIsValid(requestRegisBuyerDTO.getUsername());
+            validationField.checkPasswordIsValid(requestRegisBuyerDTO.getPassword());
 
             Buyer buyer = mapperToBuyer(requestRegisBuyerDTO);
             buyerRepo.save(buyer);
@@ -214,4 +195,6 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
                     .build();
         }
     }
+
+
 }

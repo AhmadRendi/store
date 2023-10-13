@@ -21,16 +21,6 @@ public class BuyerController {
 
     private BuyerServiceImpl buyerService;
 
-    @PostMapping("/registration")
-    public ResponseEntity<ResponseAPI<?>> createAccountsNew(@Valid @RequestBody RequestRegisBuyerDTO requestRegisBuyerDTO, Errors errors){
-        return ResponseEntity.ok(buyerService.createAccountsNews(requestRegisBuyerDTO, errors));
-    }
-
-    @GetMapping("/login")
-    public ResponseEntity<ResponseAPI<?>> login(@Valid @RequestBody RequestLoginBuyer loginBuyer, Errors errors){
-        return ResponseEntity.ok(buyerService.login(loginBuyer, errors));
-    }
-
     @PutMapping("/update/address/cellphone")
     public ResponseEntity<ResponseAPI<?>> updateAddressAndCellphone(@Valid
                                                                     @RequestBody RequestUpdateAddressCellphoneBuyer addressCellphoneBuyer,
