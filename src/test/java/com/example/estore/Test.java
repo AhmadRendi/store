@@ -6,6 +6,7 @@ import com.example.estore.repo.OwnerRepo;
 import com.example.estore.repo.StoreRepo;
 import com.example.estore.service.impl.BuyerServiceImpl;
 
+import com.example.estore.service.impl.StoreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.validation.Errors;
@@ -27,6 +28,16 @@ public class Test {
     @Autowired
     StoreRepo storeRepo;
 
+    @Autowired
+    private StoreServiceImpl service;
+
+
+    @org.junit.jupiter.api.Test
+    void testSearchStoreByName() {
+        String name = "";
+
+        service.findNameStore(name);
+    }
 
     private Long checkIdIsAlReady(List<Store> list, long searchId){
         long start = 0L;

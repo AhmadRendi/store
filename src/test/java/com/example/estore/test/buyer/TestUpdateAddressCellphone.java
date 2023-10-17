@@ -1,7 +1,7 @@
 package com.example.estore.test.buyer;
 
 import com.example.estore.Entity.Buyer;
-import com.example.estore.dto.request.RequestLoginBuyer;
+import com.example.estore.dto.request.RequestLogin;
 import com.example.estore.dto.request.RequestUpdateAddressCellphoneBuyer;
 import com.example.estore.dto.response.ResponseAPI;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,7 +39,7 @@ public class TestUpdateAddressCellphone {
 
     private  AcceptData<Buyer> login() throws Exception{
 
-        RequestLoginBuyer loginBuyer = new RequestLoginBuyer();
+        RequestLogin loginBuyer = new RequestLogin();
 
         loginBuyer.setEmail("ahmadrendiajah@gmail.com");
         loginBuyer.setPassword("@hmAd21");

@@ -3,9 +3,13 @@ package com.example.estore.service.impl;
 import com.example.estore.Entity.Store;
 import com.example.estore.dto.request.RequestRegisStoreDTO;
 import com.example.estore.dto.response.ResponseAPI;
+import com.example.estore.dto.response.ResponseListAPI;
 import com.example.estore.repo.StoreRepo;
 import com.example.estore.service.StoreService;
 import com.example.estore.validation.ErrorHandling;
+import com.example.estore.validation.SearchDataNotFoundException;
+import com.example.estore.validation.ValidationNotBlank;
+import com.example.estore.validation.ValidationNotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -97,10 +100,68 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    private void findName(String name){
+        List<Store> list = storeRepo.findStoreByName(name);
+        if(list.isEmpty()){
+            throw new SearchDataNotFoundException("Store ");
+        }else {
+            return;
+        }
+    }
+
+    private void validationSearchNotBlank(String object){
+        if(object.isBlank()){
+            throw new ValidationNotBlank("search");
+        }
+        return;
+    }
+
+    private void validationSearchNotEmpty(String object){
+        if(object.isEmpty()){
+            throw new ValidationNotEmpty("search");
+        }
+        return;
+    }
 
     @Override
-    public List<Store> findNameStore(String name) {
-        return null;
+    public ResponseListAPI<?> findNameStore(String name) {
+
+        try{
+            validationSearchNotBlank(name);
+            validationSearchNotBlank(name);
+            findName(name);
+
+
+            List<Store> list = storeRepo.findStoreByName(name);
+
+            return ResponseListAPI
+                    .builder()
+                    .code(HttpStatus.FOUND.value())
+                    .data(list)
+                    .build();
+        }catch (
+                SearchDataNotFoundException  exception
+        ){
+            List<String> error = new ArrayList<>();
+            error.add(HttpStatus.NOT_FOUND.name());
+
+            return ResponseListAPI
+                    .builder()
+                    .code(HttpStatus.NOT_FOUND.value())
+                    .error(error)
+                    .build();
+        }catch (
+                ValidationNotEmpty |
+                        ValidationNotBlank exception
+        ){
+            List<String> error = new ArrayList<>();
+            error.add(HttpStatus.BAD_REQUEST.name());
+            return ResponseListAPI.builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .error(error)
+                    .message(exception.getMessage())
+                    .build();
+        }
     }
 
 

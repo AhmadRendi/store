@@ -2,18 +2,21 @@ package com.example.estore.service.impl;
 
 import com.example.estore.Entity.Owner;
 import com.example.estore.Entity.Role;
+import com.example.estore.dto.request.RequestLogin;
 import com.example.estore.dto.request.RequestRegisOwnerDTO;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.extend.UserDetailService;
 import com.example.estore.repo.OwnerRepo;
 import com.example.estore.security.jwt.JWTService;
 import com.example.estore.service.OwnerService;
+import com.example.estore.validation.ErrorHandling;
 import com.example.estore.validation.ValidationField;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +26,7 @@ import org.springframework.validation.Errors;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -30,12 +34,10 @@ import java.util.List;
 public class OwnerServiceImpl implements OwnerService, UserDetailService {
 
     private OwnerRepo ownerRepo;
-
     private PasswordEncoder passwordEncoder;
-
     private ValidationField validationField;
-
     private JWTService service;
+    private ErrorHandling errorHandling;
 
     @Override
     public UserDetails loadUserByEmails(String email) throws UsernameNotFoundException {
@@ -105,5 +107,74 @@ public class OwnerServiceImpl implements OwnerService, UserDetailService {
                     .message(exception.getMessage())
                     .build();
         }
+    }
+
+
+    private String fetchPassword(String email){
+        return ownerRepo.fetchPasswordOwnerByEmail(email);
+    }
+
+    @Override
+    public ResponseAPI<?> login(RequestLogin login, Errors errors) {
+        try{
+            errorHandling.inputMismatchException(errors);
+            Owner owner = findOwnerByEmail(login.getEmail());
+            var email = loadUserByEmails(login.getEmail());
+            validationField.passwordIsTrue(login.getPassword(), fetchPassword(login.getEmail()));
+
+            String token = service.generatedToken(email);
+            return ResponseAPI.builder()
+                    .code(HttpStatus.OK.value())
+                    .token(token)
+                    .data(owner)
+                    .build();
+        }catch (
+                InputMismatchException exception
+        ){
+            List<String> error = new ArrayList<>();
+
+            error.add(HttpStatus.BAD_REQUEST.name());
+
+            return ResponseAPI.builder()
+                    .code(HttpStatus.BAD_REQUEST.value())
+                    .error(error)
+                    .message(exception.getMessage())
+                    .build();
+        }catch (
+                UsernameNotFoundException | BadCredentialsException exception
+        ){
+
+            if(exception instanceof BadCredentialsException){
+                List<String> error = new ArrayList<>();
+
+                error.add(HttpStatus.UNAUTHORIZED.name());
+
+                return ResponseAPI.builder()
+                        .code(HttpStatus.UNAUTHORIZED.value())
+                        .error(error)
+                        .message(exception.getMessage())
+                        .build();
+            }
+            List<String> error = new ArrayList<>();
+
+            error.add(HttpStatus.FORBIDDEN.name());
+
+            return ResponseAPI.builder()
+                    .code(HttpStatus.FORBIDDEN.value())
+                    .error(error)
+                    .message(exception.getMessage())
+                    .build();
+        }
+    }
+
+
+    @Override
+    public Optional<Owner> findOwnerByEmails(String email) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Owner findOwnerByEmail(String email) {
+        return ownerRepo.findOwnerByEmails(email).orElseThrow(() -> new UsernameNotFoundException("email not found"));
     }
 }

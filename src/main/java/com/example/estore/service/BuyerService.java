@@ -2,7 +2,7 @@ package com.example.estore.service;
 
 import com.example.estore.Entity.Buyer;
 import com.example.estore.dto.request.RequestRegisBuyerDTO;
-import com.example.estore.dto.request.RequestLoginBuyer;
+import com.example.estore.dto.request.RequestLogin;
 import com.example.estore.dto.request.RequestUpdateAddressCellphoneBuyer;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.validation.EmailUserNotFoundException;
@@ -17,7 +17,7 @@ public interface BuyerService {
 
     ResponseAPI<?> createAccountsNews(RequestRegisBuyerDTO requestRegisBuyerDTO, Errors errors);
 
-    ResponseAPI<?> login(RequestLoginBuyer loginBuyer, Errors errors);
+    ResponseAPI<?> login(RequestLogin loginBuyer, Errors errors);
 
     Buyer findEmail(String email) throws EmailUserNotFoundException;
 

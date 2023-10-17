@@ -12,5 +12,8 @@ import java.util.List;
 @Repository
 public interface StoreRepo extends JpaRepository<Store, Long> {
 
+    public List<Store> findStoreByName(String name);
+
+
 
 }

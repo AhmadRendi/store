@@ -1,4 +1,4 @@
-package com.example.estore.test.buyer;
+package com.example.estore.test.owner;
 
 
 import com.example.estore.dto.request.RequestLogin;
@@ -13,15 +13,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
 @AutoConfigureMockMvc
-public class TestLoginBuyer {
-
+@SpringBootTest
+public class TestLoginOwner {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,84 +28,81 @@ public class TestLoginBuyer {
 
 
     @Test
-    void testLoginSuccess() throws Exception {
-        RequestLogin loginBuyer = new RequestLogin();
+    void testLoginSuccess() throws Exception{
+        RequestLogin login = new RequestLogin();
 
-        loginBuyer.setEmail("ahmadrendiajah@gmail.com");
-        loginBuyer.setPassword("@hmAd21");
+        login.setEmail("ahmadrendi@gmail.com");
+        login.setPassword("@lhAm90");
 
         mockMvc.perform(
-                get("/api/login/buyer")
+                get("/api/login/owner")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginBuyer))
+                        .content(objectMapper.writeValueAsString(login))
         ).andExpectAll(
                 status().isOk()
         ).andDo(
                 result -> {
                     ResponseAPI<?> responseAPI = objectMapper.readValue(result.getResponse().getContentAsString(), ResponseAPI.class);
 
-                    Assertions.assertNotNull(responseAPI.data());
                     Assertions.assertNull(responseAPI.error());
-                    Assertions.assertEquals(HttpStatus.FOUND.value(), responseAPI.code());
+                    Assertions.assertNotNull(responseAPI.data());
+                    Assertions.assertEquals(HttpStatus.OK.value(), responseAPI.code());
 
-                    System.out.println("message " + responseAPI.data());
+                    System.out.println("message : " + responseAPI.message());
+                    System.out.println("data : " + responseAPI.data());
                 }
         );
     }
 
-
     @Test
-    void testLoginFailedBecauseEmailNotFound() throws Exception {
-        RequestLogin loginBuyer = new RequestLogin();
+    void testLoginFailedBecausePasswordIsWrongNotFoundSuccess() throws Exception{
+        RequestLogin login = new RequestLogin();
 
-        loginBuyer.setEmail("ahmadrendiajah@gmail.com");
-        loginBuyer.setPassword("@hmAd21");
+        login.setEmail("ahmadrendi@gmail.com");
+        login.setPassword("@lhAm9");
 
         mockMvc.perform(
-                get("/api/user/login")
+                get("/api/login/owner")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginBuyer))
+                        .content(objectMapper.writeValueAsString(login))
         ).andExpectAll(
                 status().isOk()
         ).andDo(
                 result -> {
                     ResponseAPI<?> responseAPI = objectMapper.readValue(result.getResponse().getContentAsString(), ResponseAPI.class);
 
-                    Assertions.assertNull(responseAPI.data());
                     Assertions.assertNotNull(responseAPI.error());
-                    Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), responseAPI.code());
+                    Assertions.assertEquals(HttpStatus.UNAUTHORIZED.value(), responseAPI.code());
 
-                    System.out.println("message " + responseAPI.message());
+                    System.out.println("message : " + responseAPI.message());
                 }
         );
-
     }
 
     @Test
-    void testLoginFailedBecauseEmailNotValid() throws Exception{
-        RequestLogin loginBuyer = new RequestLogin();
+    void testLoginFailedBecauseEmailNotFoundSuccess() throws Exception{
+        RequestLogin login = new RequestLogin();
 
-        loginBuyer.setEmail("ahmadrendi");
-        loginBuyer.setPassword("@hmAd21");
+        login.setEmail("ahmadren@gmail.com");
+        login.setPassword("@lhAm90");
 
         mockMvc.perform(
-                get("/api/user/login")
+                get("/api/login/owner")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginBuyer))
+                        .content(objectMapper.writeValueAsString(login))
         ).andExpectAll(
                 status().isOk()
         ).andDo(
                 result -> {
                     ResponseAPI<?> responseAPI = objectMapper.readValue(result.getResponse().getContentAsString(), ResponseAPI.class);
 
-                    Assertions.assertNull(responseAPI.data());
                     Assertions.assertNotNull(responseAPI.error());
-                    Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), responseAPI.code());
+                    Assertions.assertEquals(HttpStatus.FORBIDDEN.value(), responseAPI.code());
 
-                    System.out.println("message " + responseAPI.message());
+                    System.out.println("message : " + responseAPI.message());
                 }
         );
     }

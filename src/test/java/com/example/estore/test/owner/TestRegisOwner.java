@@ -31,11 +31,10 @@ public class TestRegisOwner {
         RequestRegisOwnerDTO regisOwnerDTO = new RequestRegisOwnerDTO();
 
 
-        regisOwnerDTO.setEmails("ahmad@gmail.com");
-        regisOwnerDTO.setUsernames("ahmad");
+        regisOwnerDTO.setEmails("ahmadrendi@gmail.com");
+        regisOwnerDTO.setUsernames("ahmad_rendi");
         regisOwnerDTO.setPasswords("@lhAm90");
         regisOwnerDTO.setNames("Ahmad");
-        regisOwnerDTO.setRole("OWNER");
 
 
         mockMvc.perform(
@@ -62,7 +61,6 @@ public class TestRegisOwner {
     @Test
     void regisFailedBecauseEmailIsAlReadySuccess() throws Exception{
         RequestRegisOwnerDTO regisOwnerDTO = new RequestRegisOwnerDTO();
-
 
         regisOwnerDTO.setEmails("ahmad@gmail.com");
         regisOwnerDTO.setUsernames("ahmad_ren");

@@ -1,12 +1,18 @@
 package com.example.estore.validation;
 
+import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.InputMismatchException;
 import java.util.regex.Pattern;
 
 @Component
+@AllArgsConstructor
 public class ValidationField {
+
+    private PasswordEncoder passwordEncoder;
 
 
     public void checkPasswordIsValid(String password){
@@ -27,5 +33,14 @@ public class ValidationField {
                 throw new InputMismatchException("username not valid");
             }
         }
+    }
+
+
+    public  boolean passwordIsTrue(String password, String encodePassword ){
+        final boolean passwordMatcher = passwordEncoder.matches(password, encodePassword);
+        if(passwordMatcher){
+            return true;
+        }
+        throw new BadCredentialsException("Password is wrong");
     }
 }

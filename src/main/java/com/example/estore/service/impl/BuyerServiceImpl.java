@@ -3,7 +3,7 @@ package com.example.estore.service.impl;
 import com.example.estore.Entity.Buyer;
 import com.example.estore.Entity.Role;
 import com.example.estore.dto.request.RequestRegisBuyerDTO;
-import com.example.estore.dto.request.RequestLoginBuyer;
+import com.example.estore.dto.request.RequestLogin;
 import com.example.estore.dto.request.RequestUpdateAddressCellphoneBuyer;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.validation.EmailUserNotFoundException;
@@ -15,8 +15,6 @@ import com.example.estore.service.BuyerService;
 import com.example.estore.validation.ValidationField;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Request;
-import org.apache.coyote.Response;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +26,6 @@ import org.springframework.validation.Errors;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 @Service
@@ -137,12 +134,11 @@ public class BuyerServiceImpl implements BuyerService, UserDetailService {
     }
 
     @Override
-    public ResponseAPI<?> login(RequestLoginBuyer loginBuyer, Errors errors) {
+    public ResponseAPI<?> login(RequestLogin loginBuyer, Errors errors) {
 
         try {
 
             errorHandling.inputMismatchException(errors);
-
             var username = service.generatedToken(loadUserByEmails(loginBuyer.getEmail()));
             Buyer buyer = findEmail(loginBuyer.getEmail());
             return ResponseAPI.builder()

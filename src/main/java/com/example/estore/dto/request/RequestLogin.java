@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RequestLoginBuyer {
+public class RequestLogin {
 
     @NotBlank(message = "email can't blank")
     @Email(message = "email not valid")

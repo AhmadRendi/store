@@ -46,8 +46,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        log.info(header);
-
         jwt = header.substring(7);
         log.info(jwt);
         username = service.extractUsername(jwt);

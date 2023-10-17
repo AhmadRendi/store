@@ -30,6 +30,10 @@ public interface OwnerRepo extends JpaRepository<Owner, Long> {
 //    );
 
 
+        @Query(value = "SELECT fetchPasswordOwnerByEmail(:email);", nativeQuery = true )
+        public String fetchPasswordOwnerByEmail(@Param("email") String email);
+
+
     Optional<Owner> findOwnerByEmails(String email);
 
     Optional<Owner> findOwnerByUsernames(String username);

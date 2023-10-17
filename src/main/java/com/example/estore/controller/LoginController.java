@@ -1,6 +1,6 @@
 package com.example.estore.controller;
 
-import com.example.estore.dto.request.RequestLoginBuyer;
+import com.example.estore.dto.request.RequestLogin;
 import com.example.estore.dto.request.RequestRegisBuyerDTO;
 import com.example.estore.dto.request.RequestRegisOwnerDTO;
 import com.example.estore.dto.response.ResponseAPI;
@@ -34,8 +34,13 @@ public class LoginController {
     }
 
     @GetMapping("/login/buyer")
-    public ResponseEntity<ResponseAPI<?>> login(@Valid @RequestBody RequestLoginBuyer loginBuyer, Errors errors){
+    public ResponseEntity<ResponseAPI<?>> loginBuyer(@Valid @RequestBody RequestLogin loginBuyer, Errors errors){
         return ResponseEntity.ok(buyerService.login(loginBuyer, errors));
+    }
+
+    @GetMapping("/login/owner")
+    public ResponseEntity<ResponseAPI<?>> loginOwner(@Valid @RequestBody RequestLogin login, Errors errors){
+        return ResponseEntity.ok(ownerService.login(login, errors));
     }
 
 }
