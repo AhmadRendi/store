@@ -31,11 +31,11 @@ public class SecurityConfig{
                     auth.requestMatchers("/api/registration/buyer").permitAll();
                     auth.requestMatchers("/api/login/buyer").permitAll();
                     auth.requestMatchers("/api/login/owner").permitAll();
-                    auth.requestMatchers("/api/store/create").permitAll();
-//                    auth.requestMatchers("/api/store/**").hasAnyAuthority("OWNER", "ADMIN");
-                    auth.requestMatchers("/api/store/**").permitAll();
+                    auth.requestMatchers("/api/store/**").hasAnyAuthority("OWNER", "ADMIN");
                     auth.requestMatchers("/api/user/**").hasAnyRole("BUYER", "ADMIN");
                     auth.requestMatchers("/api/owner/**").hasAnyRole("OWNER", "ADMIN");
+                    auth.requestMatchers("/api/product/**").hasAnyAuthority("OWNER", "ADMIN");
+//                    auth.requestMatchers("/api/product/**").permitAll();
                 })
                 .sessionManagement(sesMen -> {
                     sesMen.sessionCreationPolicy(SessionCreationPolicy.STATELESS);

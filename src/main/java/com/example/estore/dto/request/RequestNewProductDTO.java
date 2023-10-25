@@ -1,5 +1,6 @@
 package com.example.estore.dto.request;
 
+import com.example.estore.Entity.Store;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -14,4 +15,6 @@ public class RequestNewProductDTO {
     private long stock;
 
     private String description;
+
+    private Long store;
 }

@@ -28,21 +28,20 @@ public class StoreServiceImpl implements StoreService {
 
     private ErrorHandling errorHandling;
 
-    private Long checkIdIsAlReady(List<Store> list, long searchId){
+    private Long checkIdIsAlReady(List<Long> list, long searchId){
         long start = 0L;
         long end = (long) list.size();
-
-        while(start < end){
+        while(start <= end){
 
             long mid = (start + end) / 2;
-            Long midId = list.get(Math.toIntExact(mid)).getId();
+            Long midId = list.get(Math.toIntExact(mid));
             long compare = midId.compareTo(searchId);
             if(compare == 0){
                 return midId;
             } else if (compare < 0) {
-                end = mid;
+                start = mid + 1;
             }else {
-                start = mid;
+                end = mid - 1;
             }
         }
         return null;
@@ -50,18 +49,13 @@ public class StoreServiceImpl implements StoreService {
 
     private Store storeMapper(RequestRegisStoreDTO regisStoreDTO){
         Store store = new Store();
-        long range = 1_000_000_000_000L;
+        long range = 1_000;
         Random random = new Random();
         long id = 0L;
         for(int i = 0; i <= 1; i++){
             id = random.nextLong(range);
             if(checkIdIsAlReady(
-                    storeRepo.findAll()
-                            .parallelStream()
-                            .sorted(Comparator.comparing(
-                                    Store::getId
-                            ))
-                            .toList(), id) == null
+                   storeRepo.getAllId(), id) == null
             ){
                 regisStoreDTO.setId(id);
                 store.setId(regisStoreDTO.getId());
@@ -81,6 +75,11 @@ public class StoreServiceImpl implements StoreService {
             errorHandling.inputMismatchException(errors);
 
             Store store = storeMapper(regisStoreDTO);
+
+            storeRepo.save(store);
+
+            log.info(store.getAddress());
+
             return ResponseAPI.builder()
                     .code(HttpStatus.CREATED.value())
                     .data(store)
@@ -164,5 +163,13 @@ public class StoreServiceImpl implements StoreService {
         }
     }
 
+    @Override
+    public Optional<Long> getId(long id) {
+        return storeRepo.getId(id);
+    }
 
+    @Override
+    public Store findById(long id) {
+        return storeRepo.findStoreById(id);
+    }
 }

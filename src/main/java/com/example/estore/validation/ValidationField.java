@@ -36,10 +36,10 @@ public class ValidationField {
     }
 
 
-    public  boolean passwordIsTrue(String password, String encodePassword ){
+    public void passwordIsTrue(String password, String encodePassword ){
         final boolean passwordMatcher = passwordEncoder.matches(password, encodePassword);
         if(passwordMatcher){
-            return true;
+            return;
         }
         throw new BadCredentialsException("Password is wrong");
     }

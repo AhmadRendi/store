@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.Set;
+
 @Data
 @Builder
 @Entity
@@ -22,4 +25,6 @@ public class Store {
     private String address;
 
     private String cellphone;
+
+
 }

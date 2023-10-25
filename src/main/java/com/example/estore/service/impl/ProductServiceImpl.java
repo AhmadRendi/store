@@ -1,6 +1,7 @@
 package com.example.estore.service.impl;
 
 import com.example.estore.Entity.Product;
+import com.example.estore.Entity.Store;
 import com.example.estore.dto.request.RequestNewProductDTO;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.repo.ProductRepo;
@@ -24,16 +25,20 @@ public class ProductServiceImpl implements ProductService {
 
     private ProductRepo productRepo;
     private ErrorHandling errorHandling;
+    private StoreServiceImpl storeService;
 
 
-    public Product productMapper(RequestNewProductDTO productDTO){
+    private Product productMapper(RequestNewProductDTO productDTO){
         Product product = new Product();
+
+        log.info("store id : " + productDTO.getStore());
 
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
         product.setStock(productDTO.getStock());
         product.setDescription(productDTO.getDescription());
-
+        Store store = storeService.findById(productDTO.getStore());
+        product.setStore(store);
         return product;
     }
 
@@ -43,6 +48,8 @@ public class ProductServiceImpl implements ProductService {
             errorHandling.inputMismatchException(errors);
             
             Product product = productMapper(productDTO);
+
+            productRepo.save(product);
 
             return ResponseAPI.builder()
                     .code(HttpStatus.CREATED.value())

@@ -1,5 +1,6 @@
 package com.example.estore.test.store;
 
+import com.example.estore.dto.request.RequestLogin;
 import com.example.estore.dto.request.RequestRegisStoreDTO;
 import com.example.estore.dto.response.ResponseAPI;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,18 +27,51 @@ public class TestRegisStore {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private static final String out = "Authorization";
+    private static final String bear = "Bearer ";
+
+    private  String login() throws Exception{
+        RequestLogin login = new RequestLogin();
+
+        final String[] token = new String[1];
+
+        login.setEmail("ahmadrendi@gmail.com");
+        login.setPassword("@lhAm90");
+
+
+        mockMvc.perform(
+                get("/api/login/owner")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(login))
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(
+                result -> {
+                    ResponseAPI<?> responseAPI = objectMapper.readValue(result.getResponse().getContentAsString(), ResponseAPI.class);
+
+                    token[0] = responseAPI.token();
+                }
+        );
+
+        return token[0];
+    }
+
     @Test
     void regisSuccess() throws Exception{
         RequestRegisStoreDTO regisStoreDTO = new RequestRegisStoreDTO();
-        regisStoreDTO.setName("Toko buku");
-        regisStoreDTO.setAddress("Jakarta Selatan");
+        regisStoreDTO.setName("store book");
+        regisStoreDTO.setAddress("Tanggerang City");
         regisStoreDTO.setCellphone("082209874632");
 
+        String token = login();
+
         mockMvc.perform(
-                post("/api/create/store")
+                post("/api/store/create")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(regisStoreDTO))
+                        .header(out ,bear + token)
         ).andExpectAll(
                 status().isOk()
         ).andDo(

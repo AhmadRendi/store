@@ -1,6 +1,7 @@
 package com.example.estore.security.jwt;
 
 import com.example.estore.Entity.Buyer;
+import com.example.estore.Entity.Owner;
 import com.example.estore.service.BuyerService;
 import com.example.estore.service.impl.BuyerServiceImpl;
 import jakarta.servlet.FilterChain;
@@ -51,7 +52,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         username = service.extractUsername(jwt);
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
+
             UserDetails userDetails  = this.userDetailsService.loadUserByUsername(username);
+
             if(service.isValidToken(jwt, userDetails)){
 
                     UsernamePasswordAuthenticationToken authenticationFilter = new UsernamePasswordAuthenticationToken(

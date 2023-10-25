@@ -1,31 +1,35 @@
-package com.example.estore.test.store;
+package com.example.estore.test.product;
+
 
 import com.example.estore.Entity.Store;
 import com.example.estore.dto.request.RequestLogin;
-import com.example.estore.dto.request.Search;
+import com.example.estore.dto.request.RequestNewProductDTO;
+//import com.example.estore.test.store.TestSearchNameStore;
 import com.example.estore.dto.response.ResponseAPI;
-import com.example.estore.dto.response.ResponseListAPI;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @AutoConfigureMockMvc
 @SpringBootTest
-public class TestSearchNameStore {
+public class TestCreateNewProduct {
 
     @Autowired
     private MockMvc mockMvc;
@@ -36,11 +40,12 @@ public class TestSearchNameStore {
     private static final String out = "Authorization";
     private static final String bear = "Bearer ";
 
+
     private AcceptData<Store> login() throws Exception{
 
         RequestLogin loginBuyer = new RequestLogin();
 
-        loginBuyer.setEmail("ahmadrendi@gmail.com");
+        loginBuyer.setEmail("ahmad@gmail.com");
         loginBuyer.setPassword("@lhAm90");
 
 
@@ -72,6 +77,7 @@ public class TestSearchNameStore {
         return new ArrayList<>(Arrays.asList(split));
     }
 
+
     private Long id(String token){
 
         List<String> list = resultSplit(token);
@@ -96,7 +102,7 @@ public class TestSearchNameStore {
     private List<String> accept() throws Exception {
         AcceptData<Store> acceptData = login();
         String token = acceptData.getToken();
-        String data = String.valueOf(acceptData.data);
+        String data = String.valueOf(acceptData.getData());
         Long id = id(data);
         List<String> list = new ArrayList<>();
         list.add(token);
@@ -134,31 +140,35 @@ public class TestSearchNameStore {
     }
 
     @Test
-    void searchSuccess() throws Exception{
-
-        Search search = new Search();
-
-        search.setName("PT Grammedia");
-
+    void createSuccess() throws Exception {
 
         String token = loginn();
-        System.out.println(token);
+
+        RequestNewProductDTO productDTO = new RequestNewProductDTO();
+
+        productDTO.setName("Shampoo");
+        productDTO.setPrice(5000);
+        productDTO.setStock(100);
+        productDTO.setDescription("Hilangkan Ketombe sekarang juga");
+        productDTO.setStore(350L);
+
 
         mockMvc.perform(
-                get("/api/store/search/name")
+                post("/api/product/create")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .contentType(objectMapper.writeValueAsString(search))
+                        .content(objectMapper.writeValueAsString(productDTO))
                         .header(out, bear + token)
         ).andExpectAll(
                 status().isOk()
         ).andDo(
                 result -> {
-                    ResponseListAPI<?> responseListAPI = objectMapper.readValue(result.getResponse().getContentAsString(), ResponseListAPI.class);
+                    AcceptData<?> acceptData = objectMapper.readValue(result.getResponse().getContentAsString(), AcceptData.class);
 
+                    Assertions.assertNotNull(acceptData.data);
 
-                    System.out.println(responseListAPI.code());
-                }
+                    System.out.println("data : " + acceptData.data);
+                 }
         );
     }
 }

@@ -1,10 +1,11 @@
 package com.example.estore.Entity;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -12,6 +13,7 @@ import lombok.Data;
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
@@ -21,4 +23,7 @@ public class Product {
     private long price;
 
     private String description;
+
+    @ManyToOne
+    private Store store;
 }
