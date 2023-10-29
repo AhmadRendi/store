@@ -60,9 +60,9 @@ public class TestRegisStore {
     @Test
     void regisSuccess() throws Exception{
         RequestRegisStoreDTO regisStoreDTO = new RequestRegisStoreDTO();
-        regisStoreDTO.setName("store book");
-        regisStoreDTO.setAddress("Tanggerang City");
-        regisStoreDTO.setCellphone("082209874632");
+        regisStoreDTO.setName("toko berhakah berlian");
+        regisStoreDTO.setAddress("Jakarta");
+        regisStoreDTO.setCellphone("082200567834");
 
         String token = login();
 

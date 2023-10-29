@@ -2,7 +2,7 @@ package com.example.estore.test.store;
 
 import com.example.estore.Entity.Store;
 import com.example.estore.dto.request.RequestLogin;
-import com.example.estore.dto.request.Search;
+import com.example.estore.dto.request.SearchDTO;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.dto.response.ResponseListAPI;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -136,7 +136,7 @@ public class TestSearchNameStore {
     @Test
     void searchSuccess() throws Exception{
 
-        Search search = new Search();
+        SearchDTO search = new SearchDTO();
 
         search.setName("PT Grammedia");
 

@@ -78,8 +78,6 @@ public class StoreServiceImpl implements StoreService {
 
             storeRepo.save(store);
 
-            log.info(store.getAddress());
-
             return ResponseAPI.builder()
                     .code(HttpStatus.CREATED.value())
                     .data(store)

@@ -1,25 +1,22 @@
 package com.example.estore;
 
-import com.example.estore.Entity.Buyer;
-import com.example.estore.Entity.Owner;
+import com.example.estore.Entity.Product;
 import com.example.estore.Entity.Store;
+import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.repo.OwnerRepo;
+import com.example.estore.repo.ProductRepo;
 import com.example.estore.repo.StoreRepo;
 import com.example.estore.service.impl.BuyerServiceImpl;
 
+import com.example.estore.service.impl.ProductServiceImpl;
 import com.example.estore.service.impl.StoreServiceImpl;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.DialectOverride;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.validation.Errors;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 
 @SpringBootTest
@@ -36,8 +33,37 @@ public class Test {
     StoreRepo storeRepo;
 
     @Autowired
+    private ProductRepo productRepo;
+
+    @Autowired
     private StoreServiceImpl service;
 
+    @Autowired
+    private ProductServiceImpl productService;
+
+
+    @org.junit.jupiter.api.Test
+    void testSearcch() {
+        List<Product> responseAPI = productRepo.searchNameProduct("shampoo");
+
+
+        System.out.println(responseAPI.get(0).getStore().getCellphone());
+//        ResponseAPI<?> responseAPI1 = productService.searchNameProduct("shampoo");
+
+//        System.out.println(responseAPI1.data());
+//
+//        List<String> pr = new ArrayList<>();
+//
+//         pr = (List<String>) responseAPI1.data();
+
+//        System.out.println(pr);
+
+//        System.out.println(responseAPI.get(0));
+
+//        for (var value : responseAPI){
+//            System.out.println(value);
+//        }
+    }
 
     @org.junit.jupiter.api.Test
     void testSearchStoreByName() {

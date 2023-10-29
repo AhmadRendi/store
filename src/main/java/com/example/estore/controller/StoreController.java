@@ -1,7 +1,7 @@
 package com.example.estore.controller;
 
 import com.example.estore.dto.request.RequestRegisStoreDTO;
-import com.example.estore.dto.request.Search;
+import com.example.estore.dto.request.SearchDTO;
 import com.example.estore.dto.response.ResponseAPI;
 import com.example.estore.dto.response.ResponseListAPI;
 import com.example.estore.service.impl.StoreServiceImpl;
@@ -26,7 +26,7 @@ public class StoreController {
     }
 
     @GetMapping("/search/name")
-    public ResponseEntity<ResponseListAPI<?>> findStoreByName(@RequestBody Search search){
+    public ResponseEntity<ResponseListAPI<?>> findStoreByName(@RequestBody SearchDTO search){
         return ResponseEntity.ok(service.findNameStore(search.getName()));
     }
 

@@ -146,7 +146,7 @@ public class TestCreateNewProduct {
 
         RequestNewProductDTO productDTO = new RequestNewProductDTO();
 
-        productDTO.setName("Shampoo");
+        productDTO.setName("piring plastik");
         productDTO.setPrice(5000);
         productDTO.setStock(100);
         productDTO.setDescription("Hilangkan Ketombe sekarang juga");

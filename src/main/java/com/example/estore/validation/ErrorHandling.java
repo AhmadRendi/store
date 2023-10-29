@@ -10,9 +10,9 @@ public class ErrorHandling {
 
     public boolean notBlank(String fieldName, String field){
         if(field.isEmpty()){
-            throw new InputMismatchException(fieldName + "can't empty");
+            throw new InputMismatchException(fieldName + " can't empty");
         }else if(field.isBlank()){
-           throw new InputMismatchException(fieldName + "can't blank");
+           throw new InputMismatchException(fieldName + " can't blank");
         }else {
             return true;
         }
