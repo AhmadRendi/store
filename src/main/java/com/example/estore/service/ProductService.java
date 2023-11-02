@@ -1,6 +1,7 @@
 package com.example.estore.service;
 
 import com.example.estore.Entity.Product;
+import com.example.estore.dto.extract.ResponseSearchProductNameProjectionDTO;
 import com.example.estore.dto.request.RequestNewProductDTO;
 import com.example.estore.dto.request.SearchDTO;
 import com.example.estore.dto.response.ResponseAPI;

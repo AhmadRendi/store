@@ -2,7 +2,11 @@ package com.example.estore;
 
 import com.example.estore.Entity.Product;
 import com.example.estore.Entity.Store;
-import com.example.estore.dto.response.ResponseAPI;
+import com.example.estore.dto.extract.Coba;
+import com.example.estore.dto.extract.ResponseSearchProductNameProjectionDTO;
+import com.example.estore.dto.request.SearchDTO;
+import com.example.estore.dto.response.ResponseProductList;
+import com.example.estore.extractCoba.Service;
 import com.example.estore.repo.OwnerRepo;
 import com.example.estore.repo.ProductRepo;
 import com.example.estore.repo.StoreRepo;
@@ -40,7 +44,6 @@ public class Test {
 
     @Autowired
     private ProductServiceImpl productService;
-
 
     @org.junit.jupiter.api.Test
     void testSearcch() {
@@ -221,5 +224,76 @@ public class Test {
         Long store = storeRepo.getId(id).get();
 
         System.out.println(store);
+    }
+
+
+//    @Entity
+//    @NamedStoredProcedureQuery(
+//            name = "ResponseProductSearchByName.search_name_product_two",
+//            procedureName = "search_name_product_two",
+//            resultClasses = {ResponseProductSearchByName.class},
+//            parameters =  {
+//                    @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "names"),
+//            }
+//    )
+//    public class Prog{
+//
+//        @Id
+//        private Long id;
+//
+//        public void setId(Long id) {
+//            this.id = id;
+//        }
+//
+//        public Long getId() {
+//            return id;
+//        }
+//    }
+
+
+//    @org.springframework.stereotype.Service
+//    @RequiredArgsConstructor
+//    public static class Service{
+//
+//        @PersistenceContext
+//        @Autowired
+//        private EntityManager entityManager;
+//        public List<ResponseProductSearchByName> search (String name){
+//            StoredProcedureQuery query = entityManager.createNamedStoredProcedureQuery("search_name_product_two");
+//
+//            query.setParameter("names", name);
+//
+//            query.execute();
+//
+//            return query.getResultList();
+//        }
+//    }
+
+    @Autowired
+    Service service1;
+    @org.junit.jupiter.api.Test
+    void testSearchNameProduct() {
+//        SearchDTO searchDTO = new SearchDTO();
+//        searchDTO.setName("cold");
+//
+//        ResponseProductList responseProductList = ResponseProductList
+//                .builder()
+//                .data(productRepo.searchProductByNames(searchDTO.getName()))
+//                .message("data")
+//                .build();
+//
+//        System.out.println(responseProductList.data().get(0).getAddress());
+
+//        List<ResponseProductSearchByName> list = service1.findName("shampoo");
+//        List<Coba> list = service1.search("shampoo");
+        List<ResponseSearchProductNameProjectionDTO> list = service1.findName("cold");
+        for(var value : list){
+            System.out.print("name product : " + value.getName());
+            System.out.print(" harga : " + value.getPrice());
+            System.out.print(" alamat : " + value.getAddress());
+            System.out.print(" nama toko : " + value.getNamest());
+            System.out.println(" id : " + value.getId());
+        }
+//        System.out.println(list.get(3));
     }
 }

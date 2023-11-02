@@ -63,7 +63,7 @@ public class TestSearchProductByName {
 
         String token = loginn();
 
-        searchDTO.setName("cold");
+        searchDTO.setName("shampoo");
 
         mockMvc.perform(
                 get("/api/product/search")
@@ -71,7 +71,6 @@ public class TestSearchProductByName {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(searchDTO))
                         .header(out, bear + token)
-
         ).andExpectAll(
                 status().isOk()
         ).andDo(
@@ -81,7 +80,9 @@ public class TestSearchProductByName {
                     Assertions.assertNotNull(productList.data());
                     Assertions.assertNull(productList.error());
 
-                    System.out.println("data : " + productList.data());
+                    for(var value : productList.data()){
+                        System.out.println(value);
+                    }
                 }
         );
     }
@@ -124,6 +125,36 @@ public class TestSearchProductByName {
         String token = loginn();
 
         searchDTO.setName(" ");
+
+        mockMvc.perform(
+                get("/api/product/search")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(searchDTO))
+                        .header(out, bear + token)
+        ).andExpectAll(
+                status().isOk()
+        ).andDo(
+                result -> {
+                    ResponseProductList productList = objectMapper.readValue(result.getResponse().getContentAsString(), ResponseProductList.class);
+
+                    Assertions.assertNull(productList.data());
+                    Assertions.assertNotNull(productList.error());
+                    Assertions.assertEquals(HttpStatus.NOT_FOUND.value(), productList.code());
+
+                    System.out.println("message : " + productList.message());
+                    System.out.println("error : " + productList.error());
+                    System.out.println("code : " + productList.code());
+                }
+        );
+    }
+    @Test
+    void testSearchNotFound() throws Exception {
+        SearchDTO searchDTO = new SearchDTO();
+
+        String token = loginn();
+
+        searchDTO.setName("rendo");
 
         mockMvc.perform(
                 get("/api/product/search")

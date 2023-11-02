@@ -2,6 +2,8 @@ package com.example.estore.service.impl;
 
 import com.example.estore.Entity.Product;
 import com.example.estore.Entity.Store;
+import com.example.estore.dto.extract.Coba;
+import com.example.estore.dto.extract.ResponseSearchProductNameProjectionDTO;
 import com.example.estore.dto.request.RequestNewProductDTO;
 import com.example.estore.dto.request.SearchDTO;
 import com.example.estore.dto.response.ResponseAPI;
@@ -12,6 +14,7 @@ import com.example.estore.validation.ErrorHandling;
 import com.example.estore.validation.SearchDataNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -71,21 +74,40 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-//    @Override
-//    public List<Product> findProductByName(String name) {
-//        return null;
-//    }
+    private boolean isEmpty(SearchDTO searchDTO){
+
+        if(productRepo.searchProductByNames(searchDTO.getName()).isEmpty()){
+            throw new SearchDataNotFoundException("product");
+        }else {
+            return true;
+        }
+    }
+
+    private List<Coba> mapperObject(String search){
+        List<ResponseSearchProductNameProjectionDTO> list = productRepo.searchProductByNames(search);
+        List<Coba> cobaList = new ArrayList<>();
+        for(var value : list){
+            String name = value.getName();
+            Long price = value.getPrice();
+            Long id = value.getId();
+            String nameStore = value.getNamest();
+            String address = value.getAddress();
+            Coba coba = new Coba(name, id, price, address, nameStore);
+            cobaList.add(coba);
+        }
+        return cobaList;
+    }
 
     @Override
     public ResponseProductList searchNameProduct(SearchDTO searchDTO, Errors errors) {
         try{
-
             errorHandling.notBlank("search", searchDTO.getName());
+            isEmpty(searchDTO);
 
             return ResponseProductList
                     .builder()
                     .code(HttpStatus.FOUND.value())
-                    .data(productRepo.searchNameProduct(searchDTO.getName()))
+                    .data(mapperObject(searchDTO.getName()))
                     .build();
 
         }catch (
@@ -104,6 +126,8 @@ public class ProductServiceImpl implements ProductService {
                     .build();
         }
     }
+
+    
 
 //    @Override
 //    public ResponseAPI<?> searchNameProduct(String names) {
